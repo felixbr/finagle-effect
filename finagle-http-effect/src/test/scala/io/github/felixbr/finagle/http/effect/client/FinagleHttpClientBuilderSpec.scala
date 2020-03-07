@@ -13,7 +13,7 @@ import scala.concurrent.duration._
 
 class FinagleHttpClientBuilderSpec extends WordSpec with IOSupport with DurationConversions {
 
-  def withServer[R](f: String => R): R = {
+  def withTestServer[R](f: String => R): R = {
     val service = new Service[Request, Response] {
       def apply(req: Request): Future[Response] = {
         val response = Response(req.version, Status.Ok)
@@ -33,7 +33,7 @@ class FinagleHttpClientBuilderSpec extends WordSpec with IOSupport with Duration
 
   ".serviceResource" must {
     "provide a working client" in {
-      withServer { dest =>
+      withTestServer { dest =>
         val response =
           FinagleHttpClientBuilder[IO]
             .withUpdatedConfig(_.withRequestTimeout(5.seconds))
