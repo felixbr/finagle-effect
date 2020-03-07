@@ -2,3 +2,8 @@ language: scala
 
 scala:
   - 2.12.10
+
+cache:
+  directories:
+    - $HOME/.coursier/cache
+    - $HOME/.ivy2/cache
