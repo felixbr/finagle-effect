@@ -17,12 +17,13 @@ lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
       Dependencies.catbirdEffect,
       Dependencies.scalaTest,
       Dependencies.scalaCheck
-    ) ++ Dependencies.logging.viaLogback
+    )
   )
 
 lazy val examples = (project in file("examples"))
   .settings(
-    skip in publish := true
+    skip in publish := true,
+    libraryDependencies ++= Dependencies.logging.viaLogback
   )
   .dependsOn(finagleHttpEffect)
 
