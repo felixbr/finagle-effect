@@ -29,6 +29,7 @@ lazy val examples = (project in file("examples"))
 
 lazy val sharedSettings: List[Def.SettingsDefinition] = List(
   scalaVersion := "2.12.10",
+  crossScalaVersions := List(scalaVersion.value, "2.13.1"),
   // format: off
   scalacOptions ++= List( // useful compiler flags for scala
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
