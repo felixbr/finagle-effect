@@ -2,6 +2,7 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / turbo := true
 
 lazy val root = (project in file("."))
+  .withId("finagle-http-effect")
   .settings(
     skip in publish := true
   )
