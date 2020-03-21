@@ -12,7 +12,6 @@ lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
   .settings(sharedSettings: _*)
   .settings(
     name := "finagle-core-effect",
-    version := "0.1.0",
     libraryDependencies ++= List(
       Dependencies.finagle.core,
       Dependencies.catbird.effect,
@@ -23,7 +22,6 @@ lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
   .settings(sharedSettings: _*)
   .settings(
     name := "finagle-http-effect",
-    version := "0.1.0",
     libraryDependencies ++= List(
       Dependencies.finagle.http,
       Dependencies.catbird.effect,
@@ -33,8 +31,8 @@ lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
 
 lazy val examples = (project in file("examples"))
   .settings(sharedSettings: _*)
+  .settings(noPublishSettings: _*)
   .settings(
-    skip in publish := true,
     libraryDependencies ++= Dependencies.logging.viaLogback
   )
   .dependsOn(finagleHttpEffect)
@@ -82,6 +80,45 @@ lazy val sharedSettings: List[Def.SettingsDefinition] = List(
     "-Ywarn-value-discard"               // Warn when non-Unit expression results are unused.
   )
   // format: on
+)
+
+lazy val publishSettings = List(
+  releaseCrossBuild := true,
+  homepage := Some(url("https://github.com/felixbr/finagle-effect")),
+  licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
+  publishMavenStyle := true,
+  publishArtifact in Test := false,
+  pomIncludeRepository := { _ =>
+    false
+  },
+  publishTo := {
+    val nexus = "https://oss.sonatype.org/"
+    if (isSnapshot.value)
+      Some("snapshots".at(nexus + "content/repositories/snapshots"))
+    else
+      Some("releases".at(nexus + "service/local/staging/deploy/maven2"))
+  },
+  autoAPIMappings := true,
+  apiURL := None,
+  scmInfo := Some(
+    ScmInfo(
+      url("https://github.com/felixbr/finagle-effect"),
+      "scm:git:git@github.com:felixbr/finagle-effect.git"
+    )
+  ),
+  pomExtra := (
+    <developers>
+      <developer>
+        <id>felixbr</id>
+        <name>Felix Bruckmeier</name>
+        <url>https://github.com/felixbr</url>
+      </developer>
+    </developers>
+  )
+)
+
+lazy val noPublishSettings = List(
+  skip in publish := true
 )
 
 addCommandAlias("scalafmtFormatAll", "; finagle-effect/scalafmtAll; finagle-effect/scalafmtSbt")
