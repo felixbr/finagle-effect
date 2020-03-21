@@ -7,7 +7,7 @@ Wrappers around finagle clients (right now `finagle-http`), so they can easily b
 
 ## Versions
 
-`finagle-effect` depends on [`catbird`](https://github.com/travisbrown/catbird) which pins the versions of `finagle` libraries and `cats-effect`.
+`finagle-effect` depends on [`catbird`](https://github.com/travisbrown/catbird) which pins the versions of [`finagle`](https://github.com/twitter/finagle) libraries and [`cats-effect`](https://github.com/typelevel/cats-effect).
 
 | finagle-effect | Twitter OSS | cats-effect |
 |----------------|-------------|-------------|
