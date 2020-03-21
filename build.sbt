@@ -3,13 +3,12 @@ ThisBuild / turbo := true
 
 lazy val root = (project in file("."))
   .withId("finagle-effect")
-  .settings(
-    skip in publish := true
-  )
+  .settings(noPublishSettings: _*)
   .aggregate(finagleCoreEffect, finagleHttpEffect, examples)
 
 lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
   .settings(sharedSettings: _*)
+  .settings(publishSettings: _*)
   .settings(
     name := "finagle-core-effect",
     libraryDependencies ++= List(
@@ -20,6 +19,7 @@ lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
 
 lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
   .settings(sharedSettings: _*)
+  .settings(publishSettings: _*)
   .settings(
     name := "finagle-http-effect",
     libraryDependencies ++= List(
