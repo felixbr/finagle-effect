@@ -39,7 +39,6 @@ lazy val examples = (project in file("examples"))
   .dependsOn(finagleHttpEffect)
 
 lazy val sharedSettings: List[Def.SettingsDefinition] = List(
-  releaseCrossBuild := true,
   scalaVersion := "2.13.1",
   crossScalaVersions := List("2.12.10", "2.13.1"),
   libraryDependencies ++= List(
@@ -80,8 +79,12 @@ lazy val sharedSettings: List[Def.SettingsDefinition] = List(
     "-Ywarn-unused:implicits",           // Warn if an implicit parameter is unused.
     "-Ywarn-unused:patvars",             // Warn if a variable bound in a pattern is unused.
     "-Ywarn-value-discard"               // Warn when non-Unit expression results are unused.
-  )
+  ),
   // format: on
+  // settings for sbt-release
+  releaseCrossBuild := true,
+  releasePublishArtifactsAction := PgpKeys.publishSigned.value,
+  releaseVcsSign := true,
 )
 
 lazy val publishSettings = List(
@@ -108,7 +111,7 @@ lazy val publishSettings = List(
       "scm:git:git@github.com:felixbr/finagle-effect.git"
     )
   ),
-  pomExtra := (
+  pomExtra :=
     <developers>
       <developer>
         <id>felixbr</id>
@@ -116,7 +119,6 @@ lazy val publishSettings = List(
         <url>https://github.com/felixbr</url>
       </developer>
     </developers>
-  )
 )
 
 lazy val noPublishSettings = List(
