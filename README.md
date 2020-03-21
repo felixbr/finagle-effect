@@ -3,9 +3,21 @@
 Wrappers around finagle clients (right now `finagle-http`), so they can easily be used in applications written in terms of `cats-effect`
 (e.g. `cats.effect.IO` or `monix.eval.Task`)  
 
-The project is not yet published publicly.
+## Versions
 
-### Usage example
+`finagle-effect` depends on [`catbird`](https://github.com/travisbrown/catbird) which pins the versions of `finagle` libraries and `cats-effect`.
+
+| finagle-effect | Twitter OSS | cats-effect |
+|----------------|-------------|-------------|
+| 0.1.0          | 20.3.0      | 2.0.0       |
+
+## finagle-http-effect
+
+```sbt
+libraryDependencies += "io.github.felixbr" %% "finagle-http-effect" % <version>
+```
+
+### Usage Example
 
 ```scala
 import cats.effect._
