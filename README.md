@@ -1,5 +1,7 @@
 # finagle-effect
 
+![Scala CI](https://github.com/felixbr/finagle-effect/workflows/Scala%20CI/badge.svg)
+
 Wrappers around finagle clients (right now `finagle-http`), so they can easily be used in applications written in terms of `cats-effect`
 (e.g. `cats.effect.IO` or `monix.eval.Task`)  
 
