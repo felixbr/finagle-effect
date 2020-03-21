@@ -3,10 +3,8 @@ ThisBuild / turbo := true
 
 lazy val root = (project in file("."))
   .withId("finagle-effect")
+  .settings(sharedSettings: _*)
   .settings(noPublishSettings: _*)
-  .settings(
-    releaseCrossBuild := true
-  )
   .aggregate(finagleCoreEffect, finagleHttpEffect, examples)
 
 lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
@@ -41,6 +39,7 @@ lazy val examples = (project in file("examples"))
   .dependsOn(finagleHttpEffect)
 
 lazy val sharedSettings: List[Def.SettingsDefinition] = List(
+  releaseCrossBuild := true,
   scalaVersion := "2.13.1",
   crossScalaVersions := List("2.12.10", "2.13.1"),
   libraryDependencies ++= List(
