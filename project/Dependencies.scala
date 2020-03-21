@@ -9,9 +9,9 @@ object Version {
 object Dependencies {
 
   object finagle {
-    val core   = "com.twitter" %% "finagle-core" % Version.finagle
-    val http   = "com.twitter" %% "finagle-http" % Version.finagle
-    val thrift = "com.twitter" %% "finagle-http" % Version.finagle
+    val core   = "com.twitter" %% "finagle-core"   % Version.finagle
+    val http   = "com.twitter" %% "finagle-http"   % Version.finagle
+    val thrift = "com.twitter" %% "finagle-thrift" % Version.finagle
   }
 
   object catbird {

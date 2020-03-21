@@ -34,7 +34,13 @@ lazy val examples = (project in file("examples"))
   .settings(sharedSettings: _*)
   .settings(noPublishSettings: _*)
   .settings(
-    libraryDependencies ++= Dependencies.logging.viaLogback
+    libraryDependencies ++= List(
+      Dependencies.finagle.http,
+      Dependencies.finagle.thrift,
+      Dependencies.catbird.effect,
+    ),
+    libraryDependencies ++= Dependencies.logging.viaLogback,
+    scalacOptions -= "-Xfatal-warnings"
   )
   .dependsOn(finagleHttpEffect)
 
