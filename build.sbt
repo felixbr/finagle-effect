@@ -2,11 +2,22 @@ Global / onChangedBuildSource := ReloadOnSourceChanges
 ThisBuild / turbo := true
 
 lazy val root = (project in file("."))
-  .withId("finagle-http-effect")
+  .withId("finagle-effect")
   .settings(
     skip in publish := true
   )
-  .aggregate(finagleHttpEffect, examples)
+  .aggregate(finagleCoreEffect, finagleHttpEffect, examples)
+
+lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
+  .settings(sharedSettings: _*)
+  .settings(
+    name := "finagle-core-effect",
+    version := "0.1.0",
+    libraryDependencies ++= List(
+      Dependencies.finagle.core,
+      Dependencies.catbird.effect,
+    )
+  )
 
 lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
   .settings(sharedSettings: _*)
@@ -14,14 +25,14 @@ lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
     name := "finagle-http-effect",
     version := "0.1.0",
     libraryDependencies ++= List(
-      Dependencies.finagleHttp,
-      Dependencies.catbirdEffect,
-      Dependencies.scalaTest,
-      Dependencies.scalaCheck
+      Dependencies.finagle.http,
+      Dependencies.catbird.effect,
     )
   )
+  .dependsOn(finagleCoreEffect % "test->test;compile->compile")
 
 lazy val examples = (project in file("examples"))
+  .settings(sharedSettings: _*)
   .settings(
     skip in publish := true,
     libraryDependencies ++= Dependencies.logging.viaLogback
@@ -29,8 +40,12 @@ lazy val examples = (project in file("examples"))
   .dependsOn(finagleHttpEffect)
 
 lazy val sharedSettings: List[Def.SettingsDefinition] = List(
-  scalaVersion := "2.12.10",
-  crossScalaVersions := List(scalaVersion.value, "2.13.1"),
+  scalaVersion := "2.13.1",
+  crossScalaVersions := List("2.12.10", "2.13.1"),
+  libraryDependencies ++= List(
+    Dependencies.scalaTest,
+    Dependencies.scalaCheck,
+  ),
   // format: off
   scalacOptions ++= List( // useful compiler flags for scala
     "-deprecation",                      // Emit warning and location for usages of deprecated APIs.
@@ -69,5 +84,7 @@ lazy val sharedSettings: List[Def.SettingsDefinition] = List(
   // format: on
 )
 
-addCommandAlias("scalafmtFormatAll", "; root/scalafmtAll; scalafmtSbt")
-addCommandAlias("scalafmtValidateAll", "; root/scalafmtCheckAll; scalafmtSbtCheck")
+addCommandAlias("scalafmtFormatAll", "; finagle-effect/scalafmtAll; finagle-effect/scalafmtSbt")
+addCommandAlias("scalafmtValidateAll", "; finagle-effect/scalafmtCheckAll; finagle-effect/scalafmtSbtCheck")
+
+addCommandAlias("validate", "; finagle-effect/test:compile; scalafmtValidateAll; finagle-effect/test")

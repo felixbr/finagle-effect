@@ -1,11 +1,11 @@
-package io.github.felixbr.finagle.http.effect
+package io.github.felixbr.finagle.core.effect
 
 import java.util.concurrent.TimeUnit
 
 import scala.concurrent.duration._
 import scala.language.implicitConversions
 
-trait DurationConversions {
+trait TwitterDurationConversions {
 
   implicit def twitterDurationToScalaFiniteDuration(
     duration: com.twitter.util.Duration
@@ -18,4 +18,4 @@ trait DurationConversions {
     com.twitter.util.Duration.fromNanoseconds(duration.toNanos)
 }
 
-object DurationConversions extends DurationConversions
+object TwitterDurationConversions extends TwitterDurationConversions

@@ -1,14 +1,14 @@
-package io.github.felixbr.finagle.http.effect
+package io.github.felixbr.finagle.core.effect
 
 import cats.effect._
 import cats.syntax.all._
 import com.twitter.finagle.Service
 import com.twitter.util.Future
-import io.github.felixbr.finagle.http.effect.DurationConversions._
 
 import scala.concurrent.duration._
 
-final class WrappedService[F[_]: Async: ContextShift, Req, Res](underlying: Service[Req, Res]) {
+final class WrappedService[F[_]: Async: ContextShift, Req, Res](underlying: Service[Req, Res])
+    extends TwitterDurationConversions {
 
   def apply(request: Req): F[Res] =
     futureToF(

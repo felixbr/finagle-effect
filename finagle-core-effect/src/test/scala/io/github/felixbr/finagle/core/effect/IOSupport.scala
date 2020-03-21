@@ -1,4 +1,4 @@
-package io.github.felixbr.finagle.http.effect
+package io.github.felixbr.finagle.core.effect
 
 import java.util.concurrent.Executors
 
