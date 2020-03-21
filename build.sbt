@@ -4,6 +4,9 @@ ThisBuild / turbo := true
 lazy val root = (project in file("."))
   .withId("finagle-effect")
   .settings(noPublishSettings: _*)
+  .settings(
+    releaseCrossBuild := true
+  )
   .aggregate(finagleCoreEffect, finagleHttpEffect, examples)
 
 lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
@@ -83,7 +86,6 @@ lazy val sharedSettings: List[Def.SettingsDefinition] = List(
 )
 
 lazy val publishSettings = List(
-  releaseCrossBuild := true,
   organization := "io.github.felixbr",
   homepage := Some(url("https://github.com/felixbr/finagle-effect")),
   licenses := Seq("Apache 2.0" -> url("http://www.apache.org/licenses/LICENSE-2.0")),
@@ -125,4 +127,4 @@ lazy val noPublishSettings = List(
 addCommandAlias("scalafmtFormatAll", "; finagle-effect/scalafmtAll; finagle-effect/scalafmtSbt")
 addCommandAlias("scalafmtValidateAll", "; finagle-effect/scalafmtCheckAll; finagle-effect/scalafmtSbtCheck")
 
-addCommandAlias("validate", "; finagle-effect/test:compile; scalafmtValidateAll; finagle-effect/test")
+addCommandAlias("validate", "; +finagle-effect/test:compile; scalafmtValidateAll; +finagle-effect/test")
