@@ -15,19 +15,20 @@ class FinagleHttpClientBuilderSpec
 
   ".serviceResource" must {
     "provide a working client" in {
-      withTestServer { server =>
-        val response =
-          FinagleHttpClientBuilder[IO]
-            .withUpdatedConfig(_.withRequestTimeout(5.seconds))
-            .serviceResource(server.address, server.label)
-            .use { httpClient =>
-              httpClient(Request())
-            }
-            .unsafeRunSync()
-
-        assert(response.contentString == TestServer.defaultResponse.contentString)
-        assert(response.status == TestServer.defaultResponse.status)
+      val (receivedRequests, response) = withTestServer { server =>
+        FinagleHttpClientBuilder[IO]
+          .withUpdatedConfig(_.withRequestTimeout(5.seconds))
+          .serviceResource(server.address, server.label)
+          .use { httpClient =>
+            httpClient(Request())
+          }
+          .unsafeRunSync()
       }
+
+      assert(receivedRequests.size == 1)
+
+      assert(response.contentString == TestServer.defaultResponse.contentString)
+      assert(response.status == TestServer.defaultResponse.status)
     }
   }
 }

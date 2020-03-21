@@ -8,7 +8,7 @@ import com.twitter.util.{Await, Future}
 
 trait HttpTestServerSupport {
 
-  case class TestServer(address: Name.Bound, receivedRequests: Vector[Request]) {
+  case class TestServer(address: Name.Bound) {
     val label = "test-server"
   }
 
@@ -21,7 +21,7 @@ trait HttpTestServerSupport {
     }
   }
 
-  def withTestServer[R](res: Response)(f: TestServer => R): R = {
+  def withTestServer[R](res: Response)(f: TestServer => R): (Vector[Request], R) = {
     var receivedRequests = Vector.empty[Request]
 
     val service = new Service[Request, Response] {
@@ -35,13 +35,13 @@ trait HttpTestServerSupport {
     val server     = Http.serve(":0", service)
     val address    = Address(server.boundAddress.asInstanceOf[InetSocketAddress])
     val boundName  = Name.bound(address)
-    val testServer = TestServer(boundName, receivedRequests)
+    val testServer = TestServer(boundName)
 
     val result = f(testServer)
     Await.ready(server.close())
-    result
+    receivedRequests -> result
   }
 
-  def withTestServer[R](f: TestServer => R): R =
+  def withTestServer[R](f: TestServer => R): (Vector[Request], R) =
     withTestServer(TestServer.defaultResponse)(f)
 }
