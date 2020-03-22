@@ -1,7 +1,7 @@
 import sbt._
 
 object Version {
-  val finagle  = "20.3.0"
+  val finagle  = "20.3.0" // when you change this, also change the scrooge version in plugins.sbt!
   val log4cats = "1.0.0"
   val logback  = "1.2.3"
 }
@@ -17,6 +17,12 @@ object Dependencies {
   object catbird {
     val effect = "io.catbird" %% "catbird-effect" % Version.finagle
   }
+
+  val scrooge = List(
+    "com.twitter"       %% "scrooge-core"   % Version.finagle,
+    "com.twitter"       %% "finagle-thrift" % Version.finagle,
+    "org.apache.thrift" % "libthrift"       % "0.10.0"
+  )
 
   val scalaTest  = "org.scalatest"  %% "scalatest"  % "3.0.8"  % "test"
   val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"

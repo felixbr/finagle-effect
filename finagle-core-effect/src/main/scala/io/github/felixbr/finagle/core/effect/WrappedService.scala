@@ -3,14 +3,14 @@ package io.github.felixbr.finagle.core.effect
 import cats.effect._
 import cats.syntax.all._
 import com.twitter.finagle.Service
-import com.twitter.util.Future
 
 import scala.concurrent.duration._
 
-final class WrappedService[F[_]: Async: ContextShift, Req, Res](underlying: Service[Req, Res])
-    extends TwitterDurationConversions {
+final class WrappedService[F[_]: Async: ContextShift, Req, Rep](underlying: Service[Req, Rep])
+    extends TwitterDurationConversions
+    with TwitterFutureConverters {
 
-  def apply(request: Req): F[Res] =
+  def apply(request: Req): F[Rep] =
     futureToF(
       underlying.apply(request)
     )
@@ -19,17 +19,4 @@ final class WrappedService[F[_]: Async: ContextShift, Req, Res](underlying: Serv
     futureToF(
       underlying.close(deadline)
     )
-
-  /**
-    * `futureToAsync` does not shift threadpools correctly, so we patch this here
-    *
-    * see: https://github.com/travisbrown/catbird/pull/209
-    */
-  private def futureToF[A](fa: => Future[A]): F[A] = {
-    import io.catbird.util.effect.futureToAsync
-
-    Bracket[F, Throwable].guarantee { // think `finally`
-      futureToAsync[F, A](fa)
-    }(ContextShift[F].shift) // Shift back to the normal threadpool (usually from IOApp)
-  }
 }

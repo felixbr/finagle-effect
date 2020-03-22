@@ -7,7 +7,7 @@ import io.github.felixbr.finagle.http.effect.client._
 
 import scala.concurrent.duration._
 
-object ExampleIOApp extends IOApp with TwitterDurationConversions {
+object ExampleHttpIOApp extends IOApp with TwitterDurationConversions {
   implicit def log: Logger[IO] = Slf4jLogger.getLogger[IO]
 
   override def run(args: List[String]): IO[ExitCode] =

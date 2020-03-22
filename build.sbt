@@ -5,9 +5,10 @@ lazy val root = (project in file("."))
   .withId("finagle-effect")
   .settings(sharedSettings: _*)
   .settings(noPublishSettings: _*)
-  .aggregate(finagleCoreEffect, finagleHttpEffect, examples)
+  .aggregate(finagleCoreEffect, finagleHttpEffect, finagleThriftEffect, examples)
 
 lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
+  .withId("core")
   .settings(sharedSettings: _*)
   .settings(publishSettings: _*)
   .settings(
@@ -19,6 +20,7 @@ lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
   )
 
 lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
+  .withId("http")
   .settings(sharedSettings: _*)
   .settings(publishSettings: _*)
   .settings(
@@ -29,6 +31,19 @@ lazy val finagleHttpEffect = (project in file("finagle-http-effect"))
     )
   )
   .dependsOn(finagleCoreEffect % "test->test;compile->compile")
+
+lazy val finagleThriftEffect = (project in file("finagle-thrift-effect"))
+  .withId("thrift")
+  .settings(sharedSettings: _*)
+  .settings(publishSettings: _*)
+  .settings(
+    name := "finagle-thrift-effect",
+    libraryDependencies ++= List(
+      Dependencies.finagle.thrift,
+      Dependencies.catbird.effect,
+    )
+  )
+  .dependsOn(finagleCoreEffect % "test->test;compile->compile", generatedThriftService)
 
 lazy val examples = (project in file("examples"))
   .settings(sharedSettings: _*)
@@ -42,7 +57,15 @@ lazy val examples = (project in file("examples"))
     libraryDependencies ++= Dependencies.logging.viaLogback,
     scalacOptions -= "-Xfatal-warnings"
   )
-  .dependsOn(finagleHttpEffect)
+  .dependsOn(finagleHttpEffect, finagleThriftEffect, generatedThriftService)
+
+lazy val generatedThriftService = (project in file("generated-thrift-service"))
+  .settings(sharedSettings: _*)
+  .settings(noPublishSettings: _*)
+  .settings(
+    libraryDependencies ++= Dependencies.scrooge,
+    scalacOptions += "-deprecation:false" // Needed for generated code
+  )
 
 lazy val sharedSettings: List[Def.SettingsDefinition] = List(
   scalaVersion := "2.13.1",
