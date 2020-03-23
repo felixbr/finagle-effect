@@ -11,7 +11,7 @@ in applications written in terms of `cats-effect` (e.g. `cats.effect.IO` or `mon
 
 | finagle-effect | Twitter OSS | cats-effect |
 |----------------|-------------|-------------|
-| 0.2.0          | 20.3.0      | 2.0.0       |
+| 0.2.1          | 20.3.0      | 2.0.0       |
 
 ## finagle-http-effect
 

@@ -43,7 +43,7 @@ lazy val finagleThriftEffect = (project in file("finagle-thrift-effect"))
       Dependencies.catbird.effect,
     )
   )
-  .dependsOn(finagleCoreEffect % "test->test;compile->compile", generatedThriftService)
+  .dependsOn(finagleCoreEffect % "test->test;compile->compile", generatedThriftService % "test->test")
 
 lazy val examples = (project in file("examples"))
   .settings(sharedSettings: _*)
