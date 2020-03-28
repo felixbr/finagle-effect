@@ -8,9 +8,7 @@
         </encoder>
     </appender>
 
-    <logger name="Main" level="INFO"/>
-
-    <root level="INFO">
+    <root level="ERROR">
         <appender-ref ref="STDOUT" />
     </root>
 </configuration>

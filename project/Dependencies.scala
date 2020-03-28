@@ -28,9 +28,10 @@ object Dependencies {
   val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"
 
   object logging {
-    val log4cats = "io.chrisdavenport" %% "log4cats-slf4j" % Version.log4cats
-    val logback  = "ch.qos.logback"    % "logback-classic" % Version.logback
+    val log4cats         = "io.chrisdavenport" %% "log4cats-slf4j" % Version.log4cats
+    val logback          = "ch.qos.logback"    % "logback-classic" % Version.logback
+    val julToSlf4jBridge = "org.slf4j"         % "jul-to-slf4j"    % "1.7.28" // This also needs to be enabled in the code via `SLF4JBridgeHandler.install()`
 
-    val viaLogback = List(log4cats, logback)
+    val viaLogback = List(log4cats, logback, julToSlf4jBridge)
   }
 }

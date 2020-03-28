@@ -16,7 +16,8 @@ lazy val finagleCoreEffect = (project in file("finagle-core-effect"))
     libraryDependencies ++= List(
       Dependencies.finagle.core,
       Dependencies.catbird.effect,
-    )
+    ),
+    libraryDependencies ++= Dependencies.logging.viaLogback.map(_ % Test)
   )
 
 lazy val finagleHttpEffect = (project in file("finagle-http-effect"))

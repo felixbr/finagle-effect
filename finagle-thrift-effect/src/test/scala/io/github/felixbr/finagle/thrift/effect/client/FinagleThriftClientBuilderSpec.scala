@@ -2,7 +2,7 @@ package io.github.felixbr.finagle.thrift.effect.client
 
 import cats.effect._
 import com.twitter.finagle.ServiceClosedException
-import io.github.felixbr.finagle.core.effect.{IOSupport, TwitterDurationConversions, TwitterFutureConversions}
+import io.github.felixbr.finagle.core.effect._
 import org.scalatest._
 
 import scala.concurrent.duration._
@@ -12,7 +12,8 @@ class FinagleThriftClientBuilderSpec
     with IOSupport
     with ThriftTestServerSupport
     with TwitterDurationConversions
-    with TwitterFutureConversions {
+    with TwitterFutureConversions
+    with FinagleLoggingSetup {
 
   ".serviceResource" must {
     val msg = "foo"
