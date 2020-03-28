@@ -2,7 +2,6 @@ package io.github.felixbr.finagle.thrift.effect.client
 
 import cats.effect._
 import com.twitter.finagle.ServiceClosedException
-import com.twitter.util.Future
 import io.github.felixbr.finagle.core.effect.{IOSupport, TwitterDurationConversions, TwitterFutureConversions}
 import org.scalatest._
 
@@ -22,7 +21,7 @@ class FinagleThriftClientBuilderSpec
       val (receivedRequests, response) = withTestServer { server =>
         FinagleThriftClientBuilder[IO]
           .withUpdatedConfig(_.withRequestTimeout(5.seconds))
-          .serviceResource[thrift.EchoService[Future]](server.address, server.label)
+          .serviceResource[thrift.EchoService.MethodPerEndpoint](server.address, server.label)
           .use { thriftClient =>
             futureToIO(thriftClient.echo(msg))
           }
@@ -38,7 +37,7 @@ class FinagleThriftClientBuilderSpec
         def client(server: TestServer): F[String] =
           FinagleThriftClientBuilder[F]
             .withUpdatedConfig(_.withRequestTimeout(5.seconds))
-            .serviceResource[thrift.EchoService[Future]](server.address, server.label)
+            .serviceResource[thrift.EchoService.MethodPerEndpoint](server.address, server.label)
             .use { thriftClient =>
               thriftClient.echo(msg)
             }
@@ -57,7 +56,7 @@ class FinagleThriftClientBuilderSpec
         val closedClient =
           FinagleThriftClientBuilder[IO]
             .withUpdatedConfig(_.withRequestTimeout(5.seconds))
-            .serviceResource[thrift.EchoService[Future]](server.address, server.label)
+            .serviceResource[thrift.EchoService.MethodPerEndpoint](server.address, server.label)
             .use { thriftClient =>
               IO.pure(thriftClient) // We intentionally leak a reference to the client; Don't try this at home!
             }

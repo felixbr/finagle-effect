@@ -1,5 +1,4 @@
 import cats.effect._
-import com.twitter.util.Future
 import io.chrisdavenport.log4cats.Logger
 import io.chrisdavenport.log4cats.slf4j.Slf4jLogger
 import io.github.felixbr.finagle.core.effect.{TwitterDurationConversions, TwitterFutureConversions}
@@ -16,7 +15,7 @@ object ExampleThriftIOApp extends IOApp with TwitterDurationConversions with Twi
 
       FinagleThriftClientBuilder[IO]
         .withUpdatedConfig(_.withRequestTimeout(5.seconds))
-        .serviceResource[thrift.EchoService[Future]](s"localhost:$port")
+        .serviceResource[thrift.EchoService.MethodPerEndpoint](s"localhost:$port")
         .use { echoClient =>
           for {
             _   <- log.info(s"Sending request")
@@ -32,13 +31,14 @@ object ExampleThriftIOApp extends IOApp with TwitterDurationConversions with Twi
     */
   private def demoThriftServerResource: Resource[IO, Int] = {
     import com.twitter.finagle.Thrift
+    import com.twitter.util.Future
 
     val port = 12345
 
     Resource
       .make {
         IO {
-          Thrift.server.serveIface(s":$port", new EchoService[Future] {
+          Thrift.server.serveIface(s":$port", new EchoService.MethodPerEndpoint {
             override def echo(input: String): Future[String] = Future.value(input)
           })
         }
