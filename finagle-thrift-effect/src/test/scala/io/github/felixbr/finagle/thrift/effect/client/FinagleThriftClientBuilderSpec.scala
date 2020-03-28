@@ -1,6 +1,7 @@
 package io.github.felixbr.finagle.thrift.effect.client
 
 import cats.effect._
+import com.twitter.finagle.ServiceClosedException
 import com.twitter.util.Future
 import io.github.felixbr.finagle.core.effect.{IOSupport, TwitterDurationConversions, TwitterFutureConversions}
 import org.scalatest._
@@ -49,6 +50,27 @@ class FinagleThriftClientBuilderSpec
 
       assert(receivedRequests == Vector(msg))
       assert(response == msg)
+    }
+
+    "close the thrift-client after the resource is no longer used" in {
+      withTestServer { server =>
+        val closedClient =
+          FinagleThriftClientBuilder[IO]
+            .withUpdatedConfig(_.withRequestTimeout(5.seconds))
+            .serviceResource[thrift.EchoService[Future]](server.address, server.label)
+            .use { thriftClient =>
+              IO.pure(thriftClient) // We intentionally leak a reference to the client; Don't try this at home!
+            }
+
+        // The leaked client should be already closed
+        intercept[ServiceClosedException] {
+          closedClient
+            .flatMap { client =>
+              futureToIO(client.echo(msg))
+            }
+            .unsafeRunSync()
+        }
+      }
     }
   }
 }
