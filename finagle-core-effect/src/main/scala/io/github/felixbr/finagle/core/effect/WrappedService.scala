@@ -8,7 +8,7 @@ import scala.concurrent.duration._
 
 final class WrappedService[F[_]: Async: ContextShift, Req, Rep](underlying: Service[Req, Rep])
     extends TwitterDurationConversions
-    with TwitterFutureConverters {
+    with TwitterFutureConvertersTo[F] {
 
   def apply(request: Req): F[Rep] =
     futureToF(

@@ -54,8 +54,11 @@ lazy val examples = (project in file("examples"))
       Dependencies.finagle.http,
       Dependencies.finagle.thrift,
       Dependencies.catbird.effect,
+      Dependencies.monix,
     ),
     libraryDependencies ++= Dependencies.logging.viaLogback,
+    // improved for-comprehensions
+    addCompilerPlugin("com.olegpy" %% "better-monadic-for" % "0.3.1"),
     scalacOptions -= "-Xfatal-warnings"
   )
   .dependsOn(finagleHttpEffect, finagleThriftEffect, generatedThriftService)

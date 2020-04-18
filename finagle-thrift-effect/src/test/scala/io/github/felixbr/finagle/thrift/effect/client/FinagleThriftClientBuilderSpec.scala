@@ -12,7 +12,7 @@ class FinagleThriftClientBuilderSpec
     with IOSupport
     with ThriftTestServerSupport
     with TwitterDurationConversions
-    with TwitterFutureConversions
+    with TwitterFutureConversionsTo[IO]
     with FinagleLoggingSetup {
 
   ".serviceResource" must {
@@ -24,7 +24,7 @@ class FinagleThriftClientBuilderSpec
           .withUpdatedConfig(_.withRequestTimeout(5.seconds))
           .serviceResource[thrift.EchoService.MethodPerEndpoint](server.address, server.label)
           .use { thriftClient =>
-            futureToIO(thriftClient.echo(msg))
+            thriftClient.echo(msg)
           }
           .unsafeRunSync()
       }
@@ -34,7 +34,7 @@ class FinagleThriftClientBuilderSpec
     }
 
     "provide a working client for F" in {
-      class Fixture[F[_]: Async: ContextShift] {
+      class Fixture[F[_]: Async: ContextShift] extends TwitterFutureConversionsTo[F] {
         def client(server: TestServer): F[String] =
           FinagleThriftClientBuilder[F]
             .withUpdatedConfig(_.withRequestTimeout(5.seconds))
@@ -66,7 +66,7 @@ class FinagleThriftClientBuilderSpec
         intercept[ServiceClosedException] {
           closedClient
             .flatMap { client =>
-              futureToIO(client.echo(msg))
+              client.echo(msg)
             }
             .unsafeRunSync()
         }

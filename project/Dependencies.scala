@@ -24,6 +24,8 @@ object Dependencies {
     "org.apache.thrift" % "libthrift"       % "0.10.0"
   )
 
+  val monix = "io.monix" %% "monix" % "3.1.0"
+
   val scalaTest  = "org.scalatest"  %% "scalatest"  % "3.0.8"  % "test"
   val scalaCheck = "org.scalacheck" %% "scalacheck" % "1.14.3" % "test"
 

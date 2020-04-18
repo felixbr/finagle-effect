@@ -22,7 +22,7 @@ final private[thrift] case class FinagleThriftClientBuilder[F[_]: Sync: Async: C
   private val underlyingBuilder: F[Client],
   private val closeTimeout: FiniteDuration
 ) extends TwitterDurationConversions
-    with TwitterFutureConverters {
+    with TwitterFutureConvertersTo[F] {
 
   type ToClosable = {
     def asClosable: Closable
